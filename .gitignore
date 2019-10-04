@@ -23,4 +23,5 @@ htmlcov/
 .coverage.*
 *,cover
 
-app.db
+# SQLite
+*.db
