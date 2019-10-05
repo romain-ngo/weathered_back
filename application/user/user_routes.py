@@ -1,7 +1,7 @@
 from flask import Blueprint, request, make_response, jsonify
 from .user_model import db, UserModel
 from .user_schema import UserSchema
-
+from .. import bcrypt
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -25,7 +25,10 @@ def create_user():
         if user_exists:
             return make_response(f"This email or username already exists", 400)
 
-        new_user = UserModel(email=email, username=username, password=password)
+        hashed_password = bcrypt.generate_password_hash(password)
+
+        new_user = UserModel(email=email, username=username,
+                             password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         return make_response(f"{username} created", 201)

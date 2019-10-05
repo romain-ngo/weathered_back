@@ -2,9 +2,12 @@
 
 This is the backend of a weather web application. You can find the frontend [here](https://github.com/romain-ngo/weathered_front).
 
-## Launch app
+## Prerequisite 
+This project uses `pipenv` as a package manager.
 
-1. Create a `.env` file in the root folder and set the following variables: 
+1. Enable the virtual environment (if it is the first time you run this command, a new virtual environment will be created): `pipenv shell`
+2. Install the dependencies: `pipenv install`
+3. Create a `.env` file in the root folder and set the following variables: 
 
 ```.env
 TESTING=True | False 
@@ -16,7 +19,8 @@ DB_TRACK_MODIFICATIONS=True | False
 ```
 **/!\\ Add `.env` to `.gitignore` and make sure it is never committed /!\\**
 
-2. You can start the flask application by starting the bash script `start.sh` located in the root folder by running:
+## Launch app
+1. You can start the flask application by starting the bash script `start.sh` located in the root folder by running:
 
 ```bash
 sh start.sh
@@ -25,10 +29,12 @@ sh start.sh
 You can also run the application manually with the following commands:
 
 ```bash
-export FLASK_APP = app.py
+export FLASK_APP = wsgi.py
 export FLASK_ENV=development
 flask run
 ```
+
+In either case, make sure to change the variables depending on the needs.
 
 ## Application factory
 
@@ -37,10 +43,11 @@ The entry point of the application is `wsgi.py`. This file will call the __init_
 The application make use of blueprints in order to separate each sub application into their own module.
 
 ## Database
-We make use of flask-sqlalchemy in order to connect to a database. Flask-sqlalchemy is an ORM (Object Relationnal Mapper) having the ability to change dialects easily.
-In a production environment, we use SQLite but make sure to use a more suited RDBMS such as PostgreSQL.
-The configuration is done in `config.py` but the valued are set in `.env`
+We make use of flask-sqlalchemy in order to connect to a database. Flask-sqlalchemy is an ORM (Object Relationnal Mapper) giving us the ability to change dialects easily.
+We use SQLite in a development environment but make sure to a more suitable RDBMS such as PostgreSQL in a production environment.
+The configuration is done in `config.py` but the values are set in `.env`
 
+### Database migration
 1. Create the model
 2. Create the migration repository: `flask db init`
 3. Create the database migration: `flask db migrate`.  

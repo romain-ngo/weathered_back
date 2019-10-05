@@ -1,10 +1,12 @@
 from flask import Flask, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_bcrypt import Bcrypt
 
 # Globally accessible libraries
 db = SQLAlchemy()
 mallow = Marshmallow()
+bcrypt = Bcrypt()
 
 
 def create_app():
@@ -15,6 +17,7 @@ def create_app():
     # Initialize Plugins
     db.init_app(app)
     mallow.init_app(app)
+    bcrypt.init_app(app)
 
     with app.app_context():
         # Include routes
