@@ -35,6 +35,7 @@ flask run
 ```
 
 In either case, make sure to change the variables depending on the needs.
+The application will run on port 5000 by default.
 
 ## Application factory
 
