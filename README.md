@@ -51,3 +51,61 @@ If you are using sqlite, if the database file does not exist, this command will 
 ### Updating the database
 If the database structure needs to be modified, make the change in the model locally, then generate a new migration file.  
 Apply the modifications with `flask db upgrade`. If any mistakes are made and we need to revert back to a previous structure, use `flask db downgrade`.
+
+## API 
+
+### User
+
+* Add new user  
+`POST /user`
+```json
+{
+  "email": "",
+  "username": "",
+  "password": ""
+}
+```
+
+* Edit a user  
+`PUT /user/:id`
+```json
+{
+  "email": "",
+  "username": "",
+  "password": ""
+}
+```
+
+* Log in  
+`GET /login`
+```json
+{
+  "email": "",
+  "password": ""
+}
+```
+
+* Log out  
+`POST /logout`
+```json
+{
+  "email": ""
+}
+```
+
+* Get locations of user 
+`GET /user/:id/locations`
+
+### Location
+
+* Add new location
+`POST /location`
+```json
+{
+  "id": 0,
+  "country": "",
+  "city": "",
+  "latitude": 0,
+  "longitude": 0
+}
+```

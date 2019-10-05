@@ -1,7 +1,6 @@
 from flask import Blueprint, request, make_response, jsonify
 from .user_model import db, UserModel
 from .user_schema import UserSchema
-import json
 
 
 user_bp = Blueprint('user_bp', __name__)
@@ -22,13 +21,13 @@ def create_user():
 
     if email and username and password:
         user_exists = UserModel.query.filter(
-            UserModel.email == email or UserModel.username == username).first()
+            UserModel.email == email).first()
         if user_exists:
             return make_response(f"This email or username already exists", 400)
 
         new_user = UserModel(email=email, username=username, password=password)
         db.session.add(new_user)
         db.session.commit()
-        return make_response(f"{username} created.", 201)
+        return make_response(f"{username} created", 201)
     else:
-        return make_response(f"Error in the request", 400)
+        return make_response("Error in the request", 400)
