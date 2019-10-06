@@ -11,7 +11,6 @@ user_bp = Blueprint('user_bp', __name__)
 def get_users():
     user_schema = UserSchema(many=True)
     result = UserModel.query.all()
-    print(result[0].locations)
     return make_response(jsonify(user_schema.dump(result)), 200)
 
 
@@ -20,6 +19,7 @@ def create_user():
     email = request.json['email']
     username = request.json['username']
     password = request.json['password']
+
     if not email:
         return make_response("email field missing", 400)
     if not username:
@@ -63,7 +63,7 @@ def user_login():
             return make_response("wrong password", 400)
 
 # TODO Revoke user JWT
-@user_bp.route('logout', methods=['POST'])
+@user_bp.route('/logout', methods=['POST'])
 def user_logout():
     pass
 
