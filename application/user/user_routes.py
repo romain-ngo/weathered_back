@@ -1,5 +1,6 @@
 from flask import Blueprint, request, make_response, jsonify
 from .user_model import db, UserModel
+from ..location.location_model import LocationModel
 from .user_schema import UserSchema
 from .. import bcrypt
 
@@ -10,6 +11,7 @@ user_bp = Blueprint('user_bp', __name__)
 def get_users():
     user_schema = UserSchema(many=True)
     result = UserModel.query.all()
+    print(result[0].locations)
     return make_response(jsonify(user_schema.dump(result)), 200)
 
 
@@ -23,7 +25,7 @@ def create_user():
         user_exists = UserModel.query.filter(
             UserModel.email == email).first()
         if user_exists:
-            return make_response(f"This email or username already exists", 400)
+            return make_response(f"this email already exist", 400)
 
         hashed_password = bcrypt.generate_password_hash(
             password).decode('utf-8')
@@ -34,16 +36,16 @@ def create_user():
         db.session.commit()
         return make_response(f"{username} created", 201)
     else:
-        return make_response("Error in the request", 400)
+        return make_response("error in the request", 400)
 
-
+# TODO Must return email, username and JWT
 @user_bp.route('/login', methods=['GET'])
 def user_login():
     email = request.json['email']
     password = request.json['password']
     user = UserModel.query.filter(UserModel.email == email).first()
     if not user:
-        return make_response("This email does not exist", 400)
+        return make_response("this email does not exist", 400)
     else:
         password_is_matching = bcrypt.check_password_hash(
             user.password, password)
@@ -51,3 +53,14 @@ def user_login():
             return make_response("ok", 200)
         else:
             return make_response("wrong password", 400)
+
+
+@user_bp.route('/user/<user_id>/location', methods=['POST'])
+def add_location_to_user(user_id):
+    user = UserModel.query.filter(UserModel.id == user_id).first()
+    location_id = request.json['locationId']
+    location = LocationModel.query.filter(
+        LocationModel.id == location_id).first()
+    user.locations.append(location)
+    db.session.commit()
+    return make_response(f"location {location_id} added to {user.email}", 201)
