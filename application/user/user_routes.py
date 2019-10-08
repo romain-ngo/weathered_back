@@ -1,5 +1,9 @@
 from flask import Blueprint, request, make_response, jsonify
-from flask_jwt_extended import jwt_required, create_access_token
+from flask_jwt_extended import (
+    jwt_required, jwt_refresh_token_required,
+    get_jwt_identity, create_access_token,
+    create_refresh_token
+)
 from .user_model import db, UserModel
 from .user_schema import UserSchema
 from ..location.location_model import LocationModel
@@ -44,6 +48,7 @@ def create_user():
 
 
 @user_bp.route('/user', methods=['PUT'])
+@jwt_required
 def edit_user():
     id = request.json['id']
     email = request.json['email']
@@ -80,14 +85,26 @@ def user_login():
             user.password, password)
         if password_is_matching:
             access_token = create_access_token(identity=email)
+            refresh_token = create_refresh_token(identity=email)
             # locations = LocationModel.query.filter(
             #     LocationModel.users.any(id=id)).all()
-            return make_response(jsonify(id=user.id, email=user.email, username=user.username, access_token=access_token), 200)
+            return make_response(jsonify(id=user.id, email=user.email,
+                                         username=user.username, accessToken=access_token,
+                                         refreshToken=refresh_token), 200)
         else:
             return make_response("wrong password", 401)
 
 
+@user_bp.route('refresh', methods=['GET'])
+@jwt_refresh_token_required
+def refresh():
+    current_user = get_jwt_identity()
+    access_token = create_access_token(identity=current_user)
+    return make_response(jsonify(accessToken=access_token), 200)
+
+
 @user_bp.route('/user/<user_id>/location', methods=['POST'])
+@jwt_required
 def add_location_to_user(user_id):
     user = UserModel.query.filter(UserModel.id == user_id).first()
     location_id = request.json['locationId']
