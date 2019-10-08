@@ -1,4 +1,5 @@
 from flask import Blueprint, request, make_response, jsonify
+from flask_jwt_extended import jwt_required, create_access_token
 from .user_model import db, UserModel
 from .user_schema import UserSchema
 from ..location.location_model import LocationModel
@@ -8,6 +9,7 @@ user_bp = Blueprint('user_bp', __name__)
 
 
 @user_bp.route('/users', methods=['GET'])
+@jwt_required
 def get_users():
     user_schema = UserSchema(many=True)
     result = UserModel.query.all()
@@ -65,7 +67,7 @@ def edit_user():
     db.session.commit()
     return make_response("ok", 200)
 
-# TODO Must return email, username and JWT
+
 @user_bp.route('/login', methods=['GET'])
 def user_login():
     email = request.json['email']
@@ -77,7 +79,10 @@ def user_login():
         password_is_matching = bcrypt.check_password_hash(
             user.password, password)
         if password_is_matching:
-            return make_response("ok", 200)
+            access_token = create_access_token(identity=email)
+            # locations = LocationModel.query.filter(
+            #     LocationModel.users.any(id=id)).all()
+            return make_response(jsonify(id=user.id, email=user.email, username=user.username, access_token=access_token), 200)
         else:
             return make_response("wrong password", 401)
 

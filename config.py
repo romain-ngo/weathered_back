@@ -17,3 +17,6 @@ class Config:
         os.path.join(basedir, os.getenv('DB_FILE'))
     SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv(
         "DB_TRACK_MODIFICATIONS")
+
+    # JWT
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET')
