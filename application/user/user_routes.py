@@ -43,8 +43,27 @@ def create_user():
 
 @user_bp.route('/user', methods=['PUT'])
 def edit_user():
-    pass
+    id = request.json['id']
+    email = request.json['email']
+    username = request.json['username']
+    current_password = request.json['currentPassword']
+    new_password = request.json['newPassword']
+    if not id:
+        return make_response("missing id field", 400)
 
+    user = UserModel.query.filter(UserModel.id == id).first()
+    if len(email) > 0:
+        user.email = email
+    if len(username) > 0:
+        user.username = username
+    if len(new_password) > 0:
+        if bcrypt.check_password_hash(user.password, current_password):
+            user.password = bcrypt.generate_password_hash(
+                new_password).decode('utf-8')
+        else:
+            return make_response("wrong password", 401)
+    db.session.commit()
+    return make_response("ok", 200)
 
 # TODO Must return email, username and JWT
 @user_bp.route('/login', methods=['GET'])
@@ -60,12 +79,7 @@ def user_login():
         if password_is_matching:
             return make_response("ok", 200)
         else:
-            return make_response("wrong password", 400)
-
-# TODO Revoke user JWT
-@user_bp.route('/logout', methods=['POST'])
-def user_logout():
-    pass
+            return make_response("wrong password", 401)
 
 
 @user_bp.route('/user/<user_id>/location', methods=['POST'])
