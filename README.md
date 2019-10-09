@@ -2,6 +2,21 @@
 
 This is the backend of a weather web application. You can find the frontend [here](https://github.com/romain-ngo/weathered_front).
 
+- [weathered_back](#weatheredback)
+  - [Folder structure](#folder-structure)
+  - [Prerequisite](#prerequisite)
+  - [Launch app](#launch-app)
+  - [Application factory](#application-factory)
+  - [Database](#database)
+    - [Database schema](#database-schema)
+    - [ORM](#orm)
+  - [Authentication](#authentication)
+  - [Technology and framework](#technology-and-framework)
+    - [Built with](#built-with)
+  - [API](#api)
+    - [User](#user)
+    - [Location](#location)
+
 ## Folder structure
 
 * application/: where the flask application lives
@@ -80,6 +95,17 @@ Only use the access token for accessing a protected route.
 Whenever the access token is expired, use the refresh token to get a new access token.
 The tokens must be appended to a request in the authorization header.
 
+## Technology and framework
+### Built with
+* python 3
+* flask: lightweight web framework
+* flask-sqlalchemy: ORM flask extension adding sqlalchemy to the application
+* python-dotenv: loading environment variable form a .env file
+* flask-bcrypt: flask extension providing hashing utilities
+* flask-jwt-extended: flask extension adding support for JSON Web Token
+* flask-marshmallow: flask extension integrating object serialization
+
+
 ## API 
 
 ### User
@@ -94,13 +120,23 @@ The tokens must be appended to a request in the authorization header.
 }
 ```
 
-* Edit a user  
+* Edit a user (access jwt required)  
 `PUT /user/:id`
 ```json
 {
-  "email": "",
-  "username": "",
-  "password": ""
+  "id": 0,
+  "email": optional,
+  "username": optional,
+  "currentPassword": optional if password not updated,
+  "newPassword": optional if password not updated
+}
+```
+
+* Add a location to a user (access jwt required)  
+`POST /user/:userId/location`
+```json
+{
+  "locationId": 0
 }
 ```
 
@@ -113,20 +149,13 @@ The tokens must be appended to a request in the authorization header.
 }
 ```
 
-* Log out  
-`POST /logout`
-```json
-{
-  "email": ""
-}
-```
-
-* Get locations of user 
-`GET /user/:id/locations`
+* Refresh access token (refresh jwt required)  
+`GET /refresh`  
+*Access token appended in authorization headed*
 
 ### Location
 
-* Add new location
+* Add new location  
 `POST /location`
 ```json
 {
