@@ -5,7 +5,7 @@ from .. import mallow
 
 class UserSchema(mallow.ModelSchema):
 
-    location = mallow.Nested(LocationSchema, many=True)
+    locations = mallow.Nested(LocationSchema, many=True)
 
     class Meta:
         model = UserModel

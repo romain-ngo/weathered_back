@@ -78,6 +78,7 @@ def user_login():
     email = request.json['email']
     password = request.json['password']
     user = UserModel.query.filter(UserModel.email == email).first()
+    serialized_user = UserSchema().dump(user)
     if not user:
         return make_response("this email does not exist", 400)
     else:
@@ -86,16 +87,13 @@ def user_login():
         if password_is_matching:
             access_token = create_access_token(identity=email)
             refresh_token = create_refresh_token(identity=email)
-            # locations = LocationModel.query.filter(
-            #     LocationModel.users.any(id=id)).all()
-            return make_response(jsonify(id=user.id, email=user.email,
-                                         username=user.username, accessToken=access_token,
+            return make_response(jsonify(user=serialized_user, accessToken=access_token,
                                          refreshToken=refresh_token), 200)
         else:
             return make_response("wrong password", 401)
 
 
-@user_bp.route('refresh', methods=['GET'])
+@user_bp.route('/refresh', methods=['GET'])
 @jwt_refresh_token_required
 def refresh():
     current_user = get_jwt_identity()
