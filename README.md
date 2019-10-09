@@ -2,6 +2,20 @@
 
 This is the backend of a weather web application. You can find the frontend [here](https://github.com/romain-ngo/weathered_front).
 
+## Folder structure
+
+* application/: where the flask application lives
+  * \_\_init\_\_.py: entry point of the app. this is where we initialize the lugins, register the blueprints and create the app.
+  * location/: location blueprint
+  * user/: user blueprint
+* img/: contains various img (mostly for readme)
+* .env: environment variables (__never commit this file to a repository__)
+* .gitignore: the files and folders that should not be committed
+* config.py: configuration file of the application
+* Pipfile: pipenv dependency file
+* start.sh: bash script setting the environment and start the application (run `sh start.sh`)
+* wsgi.py: the starting file
+
 ## Prerequisite 
 This project uses `pipenv` as a package manager.
 
@@ -16,6 +30,7 @@ SECRET_KEY=string
 DB_DIALECT=sqlite | postgresql | mysql | many more
 DB_FILE=name_of_the_database_file
 DB_TRACK_MODIFICATIONS=True | False
+JWT_SECRET=string (__use a complex, long and randomly generated string__)
 ```
 **/!\\ Add `.env` to `.gitignore` and make sure it is never committed /!\\**
 
@@ -44,21 +59,26 @@ The entry point of the application is `wsgi.py`. This file will call the __init_
 The application make use of blueprints in order to separate each sub application into their own module.
 
 ## Database
-We make use of flask-sqlalchemy in order to connect to a database. Flask-sqlalchemy is an ORM (Object Relationnal Mapper) giving us the ability to change dialects easily.
-We use SQLite in a development environment but make sure to a more suitable RDBMS such as PostgreSQL in a production environment.
+
+### Database schema
+![db_schema](img/weathered_db.jpg)  
+
+The database is made of two tables: User and Location. Due to the many-to-many relationship of these two tables, a join table had to be created.  
+
+### ORM
+This application uses flask-sqlalchemy in order to connect to a database.  
+Flask-sqlalchemy is a powerful ORM (Object Relationnal Mapper) giving us the ability to change dialects easily.  
+We use SQLite in a development environment but make sure to a more suitable RDBMS such as PostgreSQL in a production environment.  
 The configuration is done in `config.py` but the values are set in `.env`
 
-### Database migration
-1. Create the model
-2. Create the migration repository: `flask db init`
-3. Create the database migration: `flask db migrate`.  
-This will create a script with the modifications that has to be made to the database only if there are any.
-4. Apply the changes to the database by running: `flask db upgrade`.  
-If you are using sqlite, if the database file does not exist, this command will create it.
+## Authentication
 
-### Updating the database
-If the database structure needs to be modified, make the change in the model locally, then generate a new migration file.  
-Apply the modifications with `flask db upgrade`. If any mistakes are made and we need to revert back to a previous structure, use `flask db downgrade`.
+This application uses JWT for authentication.  
+When a user successfully authenticates from the backend, two JSON Web Tokens will be sent back: an access token and a refresh token.  
+The access token has a short expiration date whereas the refresh token has a long one.  
+Only use the access token for accessing a protected route.  
+Whenever the access token is expired, use the refresh token to get a new access token.
+The tokens must be appended to a request in the authorization header.
 
 ## API 
 

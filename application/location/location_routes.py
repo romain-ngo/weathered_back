@@ -1,11 +1,12 @@
 from flask import Blueprint, request, make_response
 from .location_model import db, LocationModel
-
+from flask_jwt_extended import jwt_required
 
 location_bp = Blueprint('location_bp', __name__)
 
 
 @location_bp.route('/location', methods=['POST'])
+@jwt_required
 def create_location():
     id = request.json['id']
     country = request.json['country']

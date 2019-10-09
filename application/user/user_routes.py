@@ -12,14 +12,6 @@ from .. import bcrypt
 user_bp = Blueprint('user_bp', __name__)
 
 
-@user_bp.route('/users', methods=['GET'])
-@jwt_required
-def get_users():
-    user_schema = UserSchema(many=True)
-    result = UserModel.query.all()
-    return make_response(jsonify(user_schema.dump(result)), 200)
-
-
 @user_bp.route('/user', methods=['POST'])
 def create_user():
     email = request.json['email']
