@@ -104,6 +104,7 @@ The tokens must be appended to a request in the authorization header.
 * flask-bcrypt: flask extension providing hashing utilities
 * flask-jwt-extended: flask extension adding support for JSON Web Token
 * flask-marshmallow: flask extension integrating object serialization
+* flask-cors: flask extension handling all cors related issues
 
 
 ## API 
