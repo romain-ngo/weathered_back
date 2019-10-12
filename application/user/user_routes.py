@@ -65,8 +65,9 @@ def edit_user():
     return make_response("ok", 200)
 
 
-@user_bp.route('/login', methods=['GET'])
+@user_bp.route('/login', methods=['POST'])
 def user_login():
+    print(request)
     email = request.json['email']
     password = request.json['password']
     user = UserModel.query.filter(UserModel.email == email).first()
