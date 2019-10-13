@@ -122,9 +122,9 @@ The tokens must be appended to a request in the authorization header.
 
 ```json
 {
-  "email": "",
-  "username": "",
-  "password": ""
+  "email": "string",
+  "username": "string",
+  "password": "string"
 }
 ```
 
@@ -133,11 +133,11 @@ The tokens must be appended to a request in the authorization header.
 
 ```json
 {
-  "id": 0,
-  "email": optional,
-  "username": optional,
-  "currentPassword": optional if password not updated,
-  "newPassword": optional if password not updated
+  "id": "integer",
+  "email": "string (optional)",
+  "username": "string (optional)",
+  "currentPassword": "string (optional)",
+  "newPassword": "string (mandatory if currentPassword specified)"
 }
 ```
 
@@ -146,7 +146,7 @@ The tokens must be appended to a request in the authorization header.
 
 ```json
 {
-  "locationId": 0
+  "locationId": "integer
 }
 ```
 
@@ -155,8 +155,8 @@ The tokens must be appended to a request in the authorization header.
 
 ```json
 {
-  "email": "",
-  "password": ""
+  "email": "string",
+  "password": "string"
 }
 ```
 
@@ -170,10 +170,10 @@ The tokens must be appended to a request in the authorization header.
 
 ```json
 {
-  "id": 0,
-  "country": "",
-  "city": "",
-  "latitude": 0,
-  "longitude": 0
+  "id": "integer",
+  "country": "string",
+  "city": "string",
+  "latitude": "integer",
+  "longitude": "integer"
 }
 ```

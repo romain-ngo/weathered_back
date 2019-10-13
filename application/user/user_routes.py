@@ -67,20 +67,23 @@ def edit_user():
 
 @user_bp.route('/login', methods=['POST'])
 def user_login():
-    print(request)
-    email = request.json['email']
-    password = request.json['password']
-    user = UserModel.query.filter(UserModel.email == email).first()
+    email_request = request.json['email']
+    password_request = request.json['password']
+    user = UserModel.query.filter(UserModel.email == email_request).first()
     serialized_user = UserSchema().dump(user)
     if not user:
         return make_response("this email does not exist", 400)
     else:
         password_is_matching = bcrypt.check_password_hash(
-            user.password, password)
+            user.password, password_request)
         if password_is_matching:
-            access_token = create_access_token(identity=email)
-            refresh_token = create_refresh_token(identity=email)
-            return make_response(jsonify(user=serialized_user, accessToken=access_token,
+            access_token = create_access_token(identity=email_request)
+            refresh_token = create_refresh_token(identity=email_request)
+            email = serialized_user['email']
+            username = serialized_user['username']
+            locations = serialized_user['locations']
+            return make_response(jsonify(id=user.id, email=email, username=username,
+                                         locations=locations, accessToken=access_token,
                                          refreshToken=refresh_token), 200)
         else:
             return make_response("wrong password", 401)
