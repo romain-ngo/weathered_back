@@ -52,9 +52,9 @@ def edit_user():
         return make_response("missing id field", 400)
 
     user = UserModel.query.filter(UserModel.id == id).first()
-    if len(email) > 0 or email != user.email:
+    if len(email) > 0 and email != user.email:
         user.email = email
-    if len(username) > 0 or username != user.username:
+    if len(username) > 0 and username != user.username:
         user.username = username
     if len(new_password) > 0:
         if bcrypt.check_password_hash(user.password, current_password):
