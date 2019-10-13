@@ -4,6 +4,7 @@ from flask_jwt_extended import (
     get_jwt_identity, create_access_token,
     create_refresh_token
 )
+from sqlalchemy import exc
 from .user_model import db, UserModel
 from .user_schema import UserSchema
 from ..location.location_model import LocationModel
@@ -51,9 +52,9 @@ def edit_user():
         return make_response("missing id field", 400)
 
     user = UserModel.query.filter(UserModel.id == id).first()
-    if len(email) > 0:
+    if len(email) > 0 or email != user.email:
         user.email = email
-    if len(username) > 0:
+    if len(username) > 0 or username != user.username:
         user.username = username
     if len(new_password) > 0:
         if bcrypt.check_password_hash(user.password, current_password):
@@ -61,7 +62,10 @@ def edit_user():
                 new_password).decode('utf-8')
         else:
             return make_response("wrong password", 401)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except exc.SQLAlchemyError as error:
+        return make_response("use other values", 500)
     return make_response("ok", 200)
 
 
