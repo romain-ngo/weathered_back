@@ -97,8 +97,11 @@ This application uses JWT for authentication.
 When a user successfully authenticates from the backend, two JSON Web Tokens will be sent back: an access token and a refresh token.  
 The access token has a short expiration date whereas the refresh token has a long one.  
 Only use the access token for accessing a protected route.  
-Whenever the access token is expired, use the refresh token to get a new access token.
-The tokens must be appended to a request in the authorization header.
+Whenever the access token is expired, use the refresh token to get a new access token.  
+By default, the access token and the refresh token have an expiration date of respectively 15 minutes and 30 days.  
+These values can be changed by setting the following variables `JWT_ACCESS_TOKEN_EXPIRE` and `JWT_REFRESH_TOKEN_EXPIRE`.  
+Please have a look at the [official documentation](https://flask-jwt-extended.readthedocs.io/en/stable/index.html) for more information.  
+The tokens must be appended to a request in the authorization header in order to access the protected resources.
 
 ## Technology and framework
 
