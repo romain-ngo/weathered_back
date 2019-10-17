@@ -6,7 +6,7 @@ from ..location.location_model import LocationModel
 userLocations = db.Table('userLocations',
                          db.Column('user_id', db.Integer, db.ForeignKey(
                              'user.id'), primary_key=True),
-                         db.Column('location.id', db.Integer, db.ForeignKey(
+                         db.Column('location_id', db.Integer, db.ForeignKey(
                              'location.id'), primary_key=True))
 
 

@@ -101,15 +101,21 @@ def refresh():
     return make_response(jsonify(accessToken=access_token), 200)
 
 
-@user_bp.route('/user/<user_id>/location', methods=['POST'])
+@user_bp.route('/user/<user_id>/location/<location_id>', methods=['POST'])
 @jwt_required
-def add_location_to_user(user_id):
+def add_location_to_user(user_id, location_id):
     user = UserModel.query.filter(UserModel.id == user_id).first()
-    location_id = request.json['locationId']
-    if not location_id:
-        return make_response("locationId field missing", 400)
     location = LocationModel.query.filter(
         LocationModel.id == location_id).first()
     user.locations.append(location)
     db.session.commit()
-    return make_response(f"location {location_id} added to {user.email}", 201)
+    return make_response(f"location {location_id} added to user {user.email}", 201)
+
+
+@user_bp.route('/user/<user_id>/location/<location_id>', methods=['DELETE'])
+# @jwt_required
+def delete_location_from_user(user_id, location_id):
+    # This needs to be refactored using the ORM way
+    sql = f"DELETE FROM userLocations WHERE user_id='{user_id}' AND location_id='{location_id}'"
+    db.engine.execute(sql)
+    return make_response("", 200)

@@ -144,14 +144,9 @@ The tokens must be appended to a request in the authorization header in order to
 }
 ```
 
-- Add a location to a user (access jwt required): `POST /user/:userId/location`  
-  body:
+- Add a location to a user (access jwt required): `POST /user/:userId/location/:locationId`  
 
-```json
-{
-  "locationId": "integer
-}
-```
+- Remove a location from a user (access jwt required): `DELETE /user/:userId/location/:locationId`
 
 - Log in: `POST /login`  
   body:
