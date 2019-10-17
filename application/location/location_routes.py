@@ -18,7 +18,7 @@ def create_location():
         location_exists = LocationModel.query.filter(
             LocationModel.id == id).first()
         if location_exists:
-            return make_response("This location already exists", 400)
+            return make_response("This location already exists", 204)
         new_location = LocationModel(
             id=id, country=country, city=city, latitude=latitude, longitude=longitude)
         db.session.add(new_location)

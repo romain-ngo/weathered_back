@@ -113,7 +113,7 @@ def add_location_to_user(user_id, location_id):
 
 
 @user_bp.route('/user/<user_id>/location/<location_id>', methods=['DELETE'])
-# @jwt_required
+@jwt_required
 def delete_location_from_user(user_id, location_id):
     # This needs to be refactored using the ORM way
     sql = f"DELETE FROM userLocations WHERE user_id='{user_id}' AND location_id='{location_id}'"
