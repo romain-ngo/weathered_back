@@ -14,8 +14,6 @@ This is the backend of a weather web application. You can find the frontend [her
   - [Technology and framework](#technology-and-framework)
     - [Built with](#built-with)
   - [API](#api)
-    - [User](#user)
-    - [Location](#location)
 
 ## Folder structure
 
@@ -118,60 +116,4 @@ The tokens must be appended to a request in the authorization header in order to
 
 ## API
 
-### User
-
-- Add new user: `POST /user`  
-  body:
-
-```json
-{
-  "email": "string",
-  "username": "string",
-  "password": "string"
-}
-```
-
-- Edit a user (access jwt required): `PUT /user/:id`  
-  body:
-
-```json
-{
-  "id": "integer",
-  "email": "string (optional)",
-  "username": "string (optional)",
-  "currentPassword": "string (optional)",
-  "newPassword": "string (mandatory if currentPassword specified)"
-}
-```
-
-- Add a location to a user (access jwt required): `POST /user/:userId/location/:locationId`  
-
-- Remove a location from a user (access jwt required): `DELETE /user/:userId/location/:locationId`
-
-- Log in: `POST /login`  
-  body:
-
-```json
-{
-  "email": "string",
-  "password": "string"
-}
-```
-
-- Refresh access token (refresh jwt required): `GET /refresh`  
-  _Access token appended in authorization headed_
-
-### Location
-
-- Add new location (access jwr required): `POST /location`  
-  body:
-
-```json
-{
-  "id": "integer",
-  "country": "string",
-  "city": "string",
-  "latitude": "integer",
-  "longitude": "integer"
-}
-```
+See `api.md`
